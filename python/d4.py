@@ -37,5 +37,19 @@ copies = {}
 for key in card_totals:
     copies[key] = 1
 
+for key in card_totals:
+    # print ("card ",key,' copies: ',copies[key],"points:",card_totals[key])
+    for copy in range(copies[key]):
+        points = card_totals[key]
+        if points == 0:
+            break
+        # print ("...adding to card:",end='')
+        i=1
+        while (i<=points):
+            # print (" ", key+i," ",end="")
+            copies[key+i]+=1
+            i+=1
+        # print ("")
+    
 print(colored(total,'yellow'))
-print(colored(card_totals,'yellow'))
+print(colored(sum(list(copies.values())),'yellow'))
