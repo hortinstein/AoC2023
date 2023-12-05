@@ -32,6 +32,10 @@ for line in f:
     total+=score
     print (colored(card_num,'red'),winners,players,common_list,colored(score,'green'))
     card_totals[card_num] = len(common_list)
-    
+
+copies = {}
+for key in card_totals:
+    copies[key] = 1
+
 print(colored(total,'yellow'))
 print(colored(card_totals,'yellow'))
