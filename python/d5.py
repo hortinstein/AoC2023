@@ -43,9 +43,9 @@ def find_locations(seeds,ordered_name,almanac_parsed):
                     seed = src_dest_range[1][seed_src]
                     # print (name,' -> ',colored(seed,"green"),' ', end='')
                     break
-            if original == seed:
-                # print (name,' -> ',colored(seed,"red"),' ', end='')
-        print (colored('END',"yellow"))
+            # if original == seed:
+            #     # print (name,' -> ',colored(seed,"red"),' ', end='')
+        # print (colored('END',"yellow"))
         results.append(seed)
     results = sorted(results)
     print (colored('Lowest',"yellow"),results[0])
