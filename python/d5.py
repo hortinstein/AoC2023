@@ -52,11 +52,25 @@ def find_locations(seeds,ordered_name,almanac_parsed):
     
 find_locations(almanac_parsed["seeds"],ordered_name,almanac_parsed)
 
+def process_range(index, almanac_parsed):
+    start = almanac_parsed["seeds"][index]
+    range_len = almanac_parsed["seeds"][index + 1] if index + 1 < len(almanac_parsed["seeds"]) else 0
+    return list(range(start, start + range_len))
+
+almanac_parsed = {"seeds": [0, 5, 10, 3]}  # Example data
 new_seeds = []
-for i in tqdm(range(0, len(almanac_parsed["seeds"]), 2)):
-    start = almanac_parsed["seeds"][i]
-    range_len = almanac_parsed["seeds"][i+1]
-    
-    new_seeds.extend(list(range(start,start+range_len)))
+
+with ThreadPoolExecutor() as executor:
+    # Create a range of indices to iterate through
+    indices = range(0, len(almanac_parsed["seeds"]), 2)
+
+    # Map the function and iterable to the executor
+    results = list(tqdm(executor.map(process_range, indices, [almanac_parsed]*len(indices)), total=len(indices)))
+
+# Flatten and extend new_seeds list
+for result in results:
+    new_seeds.extend(result)
+
+print(new_seeds)
 # Flatten the list of lists
 find_locations(new_seeds,ordered_name,almanac_parsed)
