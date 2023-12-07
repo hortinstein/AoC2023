@@ -31,10 +31,12 @@ for entry in almanac[1:]:
 
 
 def find_locations(seeds,ordered_name,almanac_parsed):
-    results = []
+    #results = []
+    lowest = 2**32
     for seed in tqdm(seeds):
         # print (seed,' ',end='')
         for name in ordered_name:
+            # print(name)
             original = seed
             for src_dest_range in almanac_parsed[name]:
                 #if its in the source
@@ -46,31 +48,21 @@ def find_locations(seeds,ordered_name,almanac_parsed):
             # if original == seed:
             #     # print (name,' -> ',colored(seed,"red"),' ', end='')
         # print (colored('END',"yellow"))
-        results.append(seed)
-    results = sorted(results)
-    print (colored('Lowest',"yellow"),results[0])
+        if seed < lowest: lowest = seed 
+        #results.append(seed)
+    #results = sorted(results)
+    print (colored('Lowest',"yellow"),lowest)#,results[0])
     
 find_locations(almanac_parsed["seeds"],ordered_name,almanac_parsed)
 
-def process_range(index, almanac_parsed):
-    start = almanac_parsed["seeds"][index]
-    range_len = almanac_parsed["seeds"][index + 1] if index + 1 < len(almanac_parsed["seeds"]) else 0
-    return list(range(start, start + range_len))
-
-almanac_parsed = {"seeds": [0, 5, 10, 3]}  # Example data
+#almanac_parsed = {"seeds": [0, 5, 10, 3]}  # Example data
 new_seeds = []
+for i in tqdm(range(0, len(almanac_parsed["seeds"]), 2)):
+    start = almanac_parsed["seeds"][i]
+    range_len = almanac_parsed["seeds"][i+1]
 
-with ThreadPoolExecutor() as executor:
-    # Create a range of indices to iterate through
-    indices = range(0, len(almanac_parsed["seeds"]), 2)
+    new_seeds.extend(list(range(start,start+range_len)))
 
-    # Map the function and iterable to the executor
-    results = list(tqdm(executor.map(process_range, indices, [almanac_parsed]*len(indices)), total=len(indices)))
-
-# Flatten and extend new_seeds list
-for result in results:
-    new_seeds.extend(result)
-
-print(new_seeds)
+# print(new_seeds)
 # Flatten the list of lists
 find_locations(new_seeds,ordered_name,almanac_parsed)
