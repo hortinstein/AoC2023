@@ -18,12 +18,20 @@ for line in f:
         ends.append(differences[-1])
         aggregated_differences.append(differences)
         nums = differences
-        print (differences)
+        # print (differences)
     total+=sum(ends)
     print (sum(ends))
-
-
-    for i,difference in enumerate(aggregated_differences.reverse())
-        next_num = [aggregated_differences[i]]
+    aggregated_differences[-1].insert(0,0)
+    #loop through backwards
+    for i,difference in reversed(list(enumerate(aggregated_differences))):
+        if i+1==len(aggregated_differences):
+            continue
+        print (i)
+        next_num = aggregated_differences[i][0] - aggregated_differences[i+1][0]
+        print ("next element",aggregated_differences[i][0],"-",aggregated_differences[i+1][0],"=",next_num)
+        print (aggregated_differences[i+1])
+        aggregated_differences[i].insert(next_num,0)
+        print (aggregated_differences[i])
+    print (aggregated_differences[0])
 print (total)
 
