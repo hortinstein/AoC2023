@@ -66,3 +66,5 @@ for i in tqdm(range(0, len(almanac_parsed["seeds"]), 2)):
 # print(new_seeds)
 # Flatten the list of lists
 find_locations(new_seeds,ordered_name,almanac_parsed)
+
+#used some help from looking at others solutions to understnad part 2

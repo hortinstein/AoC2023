@@ -1,14 +1,16 @@
 import collections
 from termcolor import colored
+import unittest
 
-#read input file
-f = open("../src/d7/p1input", "r")
 
-order = ['A','K','Q','J','T','9','8','7','6','5','4','3','2'].reverse()
 
-#       ['Z','Y','X',W',V"]
-def eval_hand(hand):
+def eval_hand(hand,p2=False):
     card_freqs = {x:hand.count(x) for x in hand}
+    if p2 and ('J' in hand and hand != "JJJJJ"):
+        j_count = card_freqs['J']
+        del card_freqs['J']
+        highest_count_element = max(card_freqs, key=card_freqs.get)
+        card_freqs[highest_count_element] += j_count
     # Five of a kind, where all five cards have the same label: AAAAA
     if 5 in card_freqs.values():
         return 6,"Five of a kind"
@@ -35,13 +37,17 @@ def eval_hand(hand):
         return 1, "One Pair"
     # High card, where all cards' labels are distinct: 23456   
     return 0, "High Card"
+        
 
 def rank_hands(hands):
     return hands.sorted()
 
-def sub_hands(hand):
-    sub = "ZYXWV"
-    unsub = "AQKJT"
+def sub_hands(hand,p2=False):
+    if p2: 
+        sub = "ZYX0V"
+    else:
+        sub = "ZYXWV"
+    unsub = "AKQJT"
     ret_hand = ""
     for card in hand:
         if card in unsub: ret_hand = ret_hand + sub[unsub.index(card)]
@@ -49,36 +55,46 @@ def sub_hands(hand):
         else: ret_hand = ret_hand + card
     return str(ret_hand)
 
-hands = []
-hand_bids = {}
-for line in f:
-    hand,bid = line.strip().split(" ")
-    hand_bids[hand] = int(bid)
 
-    #subs the cards for sorting
-    hand = sub_hands(hand)
+def calc_winner(f,p2=False):
+    hands = []
+    hand_bids = {}
+    for line in f:
+        hand,bid = line.strip().split(" ")
+        hand_bids[hand] = int(bid)
 
-    hands.append(hand)
+        #subs the cards for sorting
+        hand = sub_hands(hand,p2=p2)
 
-#replace with values so sort will work
-sorted_hands = sorted(hands)
-assert len(set(hands))==len(hands),"there is a duplicate hand in the list,need to handle edge case"
+        hands.append(hand)
 
-overall_rank = []
+    #replace with values so sort will work
+    sorted_hands = sorted(hands)
+    assert len(set(hands))==len(hands),"there is a duplicate hand in the list,need to handle edge case"
 
-for hand in hands:
-    #unsubs the cards for sorting
-    rank = sorted_hands.index(hand)
-    hand = sub_hands(hand)
-    print (hand)
-    score,hand_eval= eval_hand(hand)
-    print ("hand: ",hand," bid: ",bid," points: ",score,rank," type: ",hand_eval)
+    overall_rank = []
 
-    overall_rank.append((score,rank,hand,hand_bids[hand]))
-overall_rank = sorted(overall_rank)
-total_winnings = 0
+    for hand in hands:
+        rank = sorted_hands.index(hand)
+        #unsubs the cards 
+        hand = sub_hands(hand,p2=p2)
+        
+        score,hand_eval= eval_hand(hand,p2=p2)
+        print ("hand: ",hand," bid: ",bid," points: ",score,rank," type: ",hand_eval)
 
-for i,hand in enumerate(overall_rank):
-    total_winnings+=(i+1)*hand[3]
-    print (hand,":" ,i+1,"*",hand[3])
-print (total_winnings)
+        overall_rank.append((score,rank,hand,hand_bids[hand]))
+    overall_rank = sorted(overall_rank)
+    total_winnings = 0
+
+    for i,hand in enumerate(overall_rank):
+        total_winnings+=(i+1)*hand[3]
+        print (hand,":" ,i+1,"*",hand[3])
+    print (total_winnings)
+
+#read input file
+f = open("../src/d7/p1input", "r")
+calc_winner(f)
+
+#read input file
+f = open("../src/d7/p1input", "r")
+calc_winner(f, p2=True) #i looked a little on if i needed to handle full houses
