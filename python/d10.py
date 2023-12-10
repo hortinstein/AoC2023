@@ -43,20 +43,30 @@ for i,line in enumerate(f):
     
     pipes.append(line.strip())
 
-for line in pipes:
-    print (line)
+# for line in pipes:
+#     print (line)
 
 
-def next_move(x,y,last):
-    print (x,y,last)
-    if ((x-1,y) != last and "E" in rules[pipes[y][x-1]]):
+def print_location(x,y,name):
+    location_str = pipes[y-1][x-1] + pipes[y-1][x  ] + pipes[y-1][x+1] + '\n' +\
+                   pipes[y  ][x-1] + pipes[y  ][x  ] + pipes[y  ][x+1] + '\n' +\
+                   pipes[y+1][x-1] + pipes[y+1][x  ] + pipes[y+1][x+1] + name+'\n'
+    print ( 
+        location_str
+    )
+
+def next_move(x,y,last,name):
+    # print_location(x,y,name)
+    # print (x,y,last)
+    if ((x-1,y) != last and "W" in rules[pipes[y][x]] and "E" in rules[pipes[y][x-1]]):
         return x-1,y,(x,y)
-    if ((x+1,y) != last and "W" in rules[pipes[y][x+1]]):
+    if ((x+1,y) != last and "E" in rules[pipes[y][x]] and "W" in rules[pipes[y][x+1]]):
         return x+1,y,(x,y)
-    if ((x,y+1) != last and "N" in rules[pipes[y+1][x]]):
+    if ((x,y+1) != last and "S" in rules[pipes[y][x]] and "N" in rules[pipes[y+1][x]]):
         return x,y+1,(x,y)
-    if ((x,y-1) != last and "S" in rules[pipes[y-1][x]]):
+    if ((x,y-1) != last and "N" in rules[pipes[y][x]] and "S" in rules[pipes[y-1][x]]):
         return x,y-1,(x,y)
+   
     return x,y
 
 i_x,i_y,i_count,i_last = start_x,start_y-1,0,(start_x,start_y)
@@ -64,8 +74,9 @@ j_x,j_y,j_count,j_last = start_x,start_y+1,0,(start_x,start_y)
     
 while (i_x,i_y) != (j_x,j_y):
     
-    i_x,i_y,i_last = next_move(i_x,i_y,i_last)
+    i_x,i_y,i_last = next_move(i_x,i_y,i_last,'i')
     i_count+=1
 
-    j_x,j_y,j_last = next_move(j_x,j_y,j_last)
+    j_x,j_y,j_last = next_move(j_x,j_y,j_last,'j')
     j_count+=1
+print (j_count+1)
