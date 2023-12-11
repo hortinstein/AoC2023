@@ -43,8 +43,8 @@ for i,line in enumerate(f):
     
     pipes.append(line.strip())
 
-# for line in pipes:
-#     print (line)
+for line in pipes:
+    print (line)
 
 
 def print_location(x,y,name):
